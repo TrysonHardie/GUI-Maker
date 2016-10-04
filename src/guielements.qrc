@@ -1,0 +1,36 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data/img/GUIelements/Button.png</file>
+        <file>data/img/GUIelements/CheckBox.png</file>
+        <file>data/img/GUIelements/CompositeView.png</file>
+        <file>data/img/GUIelements/Knob.png</file>
+        <file>data/img/GUIelements/ListView.png</file>
+        <file>data/img/GUIelements/NumberBox.png</file>
+        <file>data/img/GUIelements/PopUpMenu.png</file>
+        <file>data/img/GUIelements/Slider.png</file>
+        <file>data/img/GUIelements/StaticText.png</file>
+        <file>data/img/GUIelements/TextField.png</file>
+        <file>data/HelpSources/SuperCollider/Button.schelp</file>
+        <file>data/HelpSources/SuperCollider/CheckBox.schelp</file>
+        <file>data/HelpSources/SuperCollider/CompositeView.schelp</file>
+        <file>data/HelpSources/SuperCollider/HLayoutView.schelp</file>
+        <file>data/HelpSources/SuperCollider/Knob.schelp</file>
+        <file>data/HelpSources/SuperCollider/ListView.schelp</file>
+        <file>data/HelpSources/SuperCollider/NumberBox.schelp</file>
+        <file>data/HelpSources/SuperCollider/PopUpMenu.schelp</file>
+        <file>data/HelpSources/SuperCollider/Slider.schelp</file>
+        <file>data/HelpSources/SuperCollider/SoundFileView.schelp</file>
+        <file>data/HelpSources/SuperCollider/StaticText.schelp</file>
+        <file>data/HelpSources/SuperCollider/TextField.schelp</file>
+        <file>data/HelpSources/SuperCollider/VLayoutView.schelp</file>
+        <file>data/HelpSources/SuperCollider/Window.schelp</file>
+        <file>data/HelpSources/AutoIt/CommonMethods.schelp</file>
+        <file>data/HelpSources/AutoIt/GUICtrlCreateButton.schelp</file>
+        <file>data/HelpSources/AutoIt/GUICtrlCreateCheckbox.schelp</file>
+        <file>data/HelpSources/AutoIt/GUICtrlCreateEdit.schelp</file>
+        <file>data/HelpSources/AutoIt/GUICtrlCreateLabel.schelp</file>
+        <file>data/HelpSources/AutoIt/GUICtrlCreateList.schelp</file>
+        <file>data/HelpSources/AutoIt/GUICtrlCreateSlider.schelp</file>
+        <file>data/img/icons/gui_maker.png</file>
+    </qresource>
+</RCC>

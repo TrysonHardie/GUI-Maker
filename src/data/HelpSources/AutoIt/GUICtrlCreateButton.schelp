@@ -1,0 +1,27 @@
+GUICtrlCreateButton
+
+Creates a Button control for the GUI.
+
+method:: text
+ 	The text of the button control.
+argument:: A String.
+left
+ 	The left side of the control. If -1 is used then left will be computed according to GUICoordMode.
+
+top
+ 	The top of the control. If -1 is used then top will be computed according to GUICoordMode.
+
+width
+ 	[optional] The width of the control (default text autofit in width).
+
+height
+ 	[optional] The height of the control (default text autofit in height).
+
+style
+ 	[optional] Defines the style of the control. See GUI Control Styles Appendix.
+    default ( -1) : none.
+    forced styles : $WS_TABSTOP
+
+exStyle
+ 	[optional] Defines the extended style of the control. See Extended Style Table.
+    default ( -1) : WS_EX_WINDOWEDGE

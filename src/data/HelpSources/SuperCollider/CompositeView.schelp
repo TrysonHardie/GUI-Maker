@@ -1,0 +1,82 @@
+class:: CompositeView + StaticText
+summary:: A view that contains other views.
+categories:: GUI>Views
+related:: Classes/FlowView, Classes/FlowLayout
+
+description::
+
+note::
+In Qt GUI, every view can be a parent to other views, so CompositeView redirects to the same class as link::Classes/View:: - you can use the latter equivalently.
+::
+
+CompositeView can be used as the parent of other views, while also being a child of a Window or another CompositeView itself. Aside from that it has not special methods of its own.
+
+note::
+In Cocoa GUI, this view accepts key actions, but not mouse clicks or drags.
+::
+
+
+
+CLASS:: StaticText
+summary:: A view displaying non-editable text
+categories:: GUI>Views
+
+DESCRIPTION::
+A view displaying non-editable text
+
+
+CLASSMETHODS::
+
+PRIVATE:: key
+
+
+
+INSTANCEMETHODS::
+
+SUBSECTION:: Data
+
+METHOD:: string
+	The text displayed by the view.
+
+	argument::
+		A String.
+
+METHOD:: object
+	If link::#-setBoth:: is true, setting this variable also sets link::#-string:: to the value interpreted link::Classes/Object#-asString#as String::.
+
+	argument::
+		Any object, typically one which makes sense to display as a string, such as a Float.
+
+METHOD:: setBoth
+	A variable stating whether setting link::#-object:: will also set link::#-string::.
+
+	argument::
+		A Boolean.
+
+SUBSECTION:: Appearance
+
+METHOD:: align
+	The alignment of the displayed text. See link::Reference/gui_alignments:: for possible values.
+argument:: A Symbol.
+
+METHOD:: font
+	The font used to display the text.
+
+	argument::
+		A Font.
+
+METHOD:: stringColor
+	The color used to display the text.
+
+	argument::
+		A Color.
+
+METHOD:: background
+	Setting this variable colors the whole area occupied by the view under the text with the given color.
+
+	argument::
+		A Color.
+
+
+
+

@@ -1,0 +1,58 @@
+method:: GUICtrlSetData
+argument:: Array of Strings
+
+method:: GUICtrlSetBkColor
+ 	Sets the background color of a control.
+argument:: Color
+
+method:: GUICtrlSetColor
+ 	Sets the text color of a control.
+argument:: Color
+
+method:: GUICtrlSetOnEvent
+argument:: Fuction
+
+method:: GUICtrlSetCursor
+argument:: String
+
+method:: GUICtrlSetFont
+argument:: A Font.
+
+controlID
+ 	The control identifier (controlID) as returned by a GUICtrlCreate...() function, or -1 for the last created control.
+size
+ 	Fontsize (default is 8.5).
+weight
+ 	[optional] The weight of the font in the range 0 through 1000. For example, 400 is normal and 700 is bold. If this value is zero, a default weight is used.
+The following values are defined for convenience.
+    $FW_DONTCARE = 0 (Use the default font weight)
+    $FW_THIN = 100
+    $FW_EXTRALIGHT = 200
+    $FW_LIGHT = 300
+    $FW_NORMAL = 400
+    $FW_MEDIUM = 500
+    $FW_SEMIBOLD = 600
+    $FW_BOLD = 700
+    $FW_EXTRABOLD = 800
+    $FW_HEAVY = 900
+
+Constants are defined in FontConstants.au3.
+attribute
+ 	[optional] Font attributes, which can be a combination of the following added together:
+    $GUI_FONTITALIC (2) = Italic
+    $GUI_FONTUNDER (4) = Underlined
+    $GUI_FONTSTRIKE (8) = Strike
+
+Constants are defined in GUIConstantsEx.au3.
+fontname
+ 	[optional] Name of the font to use. (OS default GUI font is used if the font is "" or is not found).
+quality
+ 	[optional] Font quality to select. The following qualities are accepted:
+    $DEFAULT_QUALITY (0) = Appearance of the font does not matter.
+    $DRAFT_QUALITY (1) = Appearance of the font is less important than when $PROOF_QUALITY is used. For GDI raster fonts, scaling is enabled, which means that more font sizes are available, but the quality may be lower. Bold, italic, underline, and strikeout fonts are synthesized if necessary.
+    $PROOF_QUALITY (2) = (default) Character quality of the font is more important than exact matching of the logical-font attributes. For GDI raster fonts, scaling is disabled and the font closest in size is chosen. Although the chosen font size may not be mapped exactly when $PROOF_QUALITY is used, the quality of the font is high and there is no distortion of appearance. Bold, italic, underline, and strikeout fonts are synthesized if necessary.
+    $NONANTIALIASED_QUALITY (3) = Font is never antialiased.
+    $ANTIALIASED_QUALITY (4) = Font is always antialiased if the font supports it and the size of the font is not too small or too large.
+    $CLEARTYPE_QUALITY (5) = If set, text is rendered (when possible) using ClearType antialiasing method. See the remarks on the msdn page for LOGFONT for details about when cleartype is not available.
+If neither $ANTIALIASED_QUALITY nor $NONANTIALIASED_QUALITY is selected, the font is antialiased only if the user chooses smooth screen fonts in Control Panel.
+Constants are defined in FontConstants.au3

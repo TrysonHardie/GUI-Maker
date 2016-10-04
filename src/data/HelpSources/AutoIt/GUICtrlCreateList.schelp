@@ -1,0 +1,6 @@
+Creates a List control for the GUI.
+
+method:: text
+ 	The text of the control.
+argument:: An Array of String.
+

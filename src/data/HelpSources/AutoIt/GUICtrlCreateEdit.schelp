@@ -1,0 +1,5 @@
+
+method:: text
+ 	The text of the control.
+argument:: An String.
+
