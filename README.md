@@ -7,7 +7,7 @@ By using GUI maker it's realy easy to create a graphical user interfaces: just d
 
 ## Mission:
 ***
-Help people to save their time for making GUIs.
+Help people to save their time spent on making GUIs.
 
 
 ## Detailed Description:
