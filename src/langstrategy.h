@@ -29,7 +29,7 @@ class TreeItem;
 class QPixmap;
 
 //---about
-#define GUI_MAKER_SITE         "https://www.trysohard.info/GUI-Maker/"
+#define GUI_MAKER_SITE         "http://trysohard.info/GUI-Maker/"
 #define GUI_MAKER_TITLE        "GUI Maker"
 #define GUI_MAKER_COPYRIGHT    "Copyright (C) 2016 Tryson Hardie."
 
