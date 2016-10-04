@@ -5,6 +5,8 @@ By using GUI maker it's realy easy to create a graphical user interfaces: just d
 
 [Homepage](http://trysohard.info/GUI-Maker/)<br>
 
+[Video](https://youtu.be/SeF3GWO346Y)<br>
+
 ## Mission:
 ***
 Help people to save their time spent on making GUIs.
