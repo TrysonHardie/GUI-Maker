@@ -164,9 +164,12 @@ public:
     void childItems2removeAt(int position);
     void childItems2append(int position, TreeItem *item);
     int indexOfChild(TreeItem *item);
+    QPointF oldPos() const;
+    void setOldPos(const QPointF &value);
+
 signals:
-//    void itemdataChanged();
-//    void selectedChange(TreeItem *selectedItem);
+    //    void itemdataChanged();
+    //    void selectedChange(TreeItem *selectedItem);
 
 public slots:
     void senddataChangedToTheModel();
@@ -182,6 +185,11 @@ protected:
 //    void keyPressEvent(QKeyEvent *ke);
 private:
 //    TreeItem *parentTreeItem;
+    enum Mods
+    {
+        NothingToDo, MoveTheElement,
+        ResizeTheElement, SelectTheElement
+    };
 
 //    List of top-level childs, stored only by RootItem
     QList<TreeItem*> childItems2;
@@ -198,13 +206,9 @@ private:
     bool m_isContainerOfViews;
     int m_current_toggle_num;
 
-    enum Mods
-    {
-        NothingToDo, MoveTheElement,
-        ResizeTheElement, SelectTheElement
-    };
-
     Mods m_mode;
+
+    QPointF myOldPos;
 
 
 

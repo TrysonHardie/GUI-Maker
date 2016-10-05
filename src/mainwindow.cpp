@@ -30,6 +30,7 @@
 #include "treeitem.h"
 #include "treemodel.h"
 #include "ui_mainwindow.h"
+#include "undoRedoCommands.h"
 
 #include <QSplitter>
 #include <QMessageBox>
@@ -48,6 +49,7 @@
 #include <QGraphicsView>
 #include <QMdiArea>
 #include <QTextEdit>
+#include <QUndoStack>
 
 // ---Main window.
 
@@ -62,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
+    undoStack = new QUndoStack(this);
 
     setWindowTitle("GUI Maker");
 
@@ -86,6 +90,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(guiMakerscene, SIGNAL(selectionChanged()),
                   this, SLOT(SettheSelectionState()));
+
+//    connect(guiMakerscene, SIGNAL(itemMoved(TreeItem*,QPointF)),
+//            this, SLOT(itemMoved(TreeItem*,QPointF)));
+
+    connect(guiMakerscene, SIGNAL(itemMoved(QVector<TreeItem *>)),
+            this, SLOT(itemMoved(QVector<TreeItem *>)));
 
 //    connect(actionOpen, SIGNAL(triggered()), this, SLOT(openDocument()));
 //    connect(actionClose, SIGNAL(triggered()), this, SLOT(closeDocument()));
@@ -226,9 +236,14 @@ void MainWindow::setupWidgets()
 {
 
 //    ---context menu
-    QAction *deleteAction = new QAction(QIcon(":/images/delete.png"), tr("&Delete"), this);
-    deleteAction->setShortcut(tr("Delete"));
-    deleteAction->setStatusTip(tr("Delete item from window"));
+//    --create Actions
+//    QAction *deleteAction = new QAction(QIcon(":/images/delete.png"), tr("&Delete"), this);
+//    deleteAction->setShortcut(tr("Delete"));
+//    deleteAction->setStatusTip(tr("Delete item from window"));
+//    connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteItem()));
+
+    QAction *deleteAction = new QAction(tr("&Delete Item"), this);
+    deleteAction->setShortcut(tr("Del"));
     connect(deleteAction, SIGNAL(triggered()), this, SLOT(deleteItem()));
 
     QAction *copyAction = new QAction(tr("Clone"), this);
@@ -236,11 +251,23 @@ void MainWindow::setupWidgets()
     copyAction->setStatusTip(tr("Clone item"));
     connect(copyAction, SIGNAL(triggered()), this, SLOT(copyOfItemMake()));
 
+//    Edit
+    QAction *undoAction = undoStack->createUndoAction(this, tr("&Undo"));
+    undoAction->setShortcuts(QKeySequence::Undo);
 
+    QAction *redoAction = undoStack->createRedoAction(this, tr("&Redo"));
+    redoAction->setShortcuts(QKeySequence::Redo);
+
+//    --create Menu
     itemMenu = menuBar()->addMenu(tr("&Item"));
     itemMenu->addAction(copyAction);
     itemMenu->addSeparator();
     itemMenu->addAction(deleteAction);
+//---
+    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
+    editMenu->addSeparator();
 
     //          itemMenu->addAction(toFrontAction);
     //          itemMenu->addAction(sendBackAction);
@@ -603,7 +630,7 @@ void MainWindow::SettheSelectionState()
 //}
 
 //--- Context Menu
-void MainWindow::deleteItem()
+void MainWindow::realDeleteItem()
 {
 //    QGraphicsItem *existedItem = 0;
 
@@ -635,6 +662,18 @@ void MainWindow::deleteItem()
 
 }
 
+void MainWindow::deleteItem()
+{
+    if (guiMakerscene->selectedItems().isEmpty())
+        return;
+
+    QUndoCommand *deleteCommand = new DeleteCommand(guiMakerscene);
+    undoStack->push(deleteCommand);
+
+    table_model->clear();
+
+//    -ToDo- remove Item from tree_model but don't delete
+}
 
 //---create new Item: copy of selected
 void MainWindow::copyOfItemMake()
@@ -734,6 +773,16 @@ void MainWindow::shiftCopyOfItemMake()
 
 
     }
+}
+
+void MainWindow::itemMoved(TreeItem *movedItem, const QPointF &oldPosition)
+{
+//    undoStack->push(new MoveCommand(movedItem, oldPosition));
+}
+
+void MainWindow::itemMoved(QVector<TreeItem *> treeItems)
+{
+    undoStack->push(new MoveCommand(treeItems));
 }
 
 //used by tree model to count items in the scene  with no parent
@@ -847,6 +896,7 @@ void MainWindow::on_actionNew_triggered()
         table_model->clear();
         tree_model->clear();
         guiMakerscene->clear();
+        undoStack->clear();
 
     }
 }

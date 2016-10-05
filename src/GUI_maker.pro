@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     arrayofcolorseditorbutton.cpp \
     guimakerscene.cpp \
     stateseditor.cpp \
-    langstrategy.cpp
+    langstrategy.cpp \
+    undoRedoCommands.cpp
 
 
 HEADERS  += mainwindow.h \
@@ -46,7 +47,8 @@ HEADERS  += mainwindow.h \
     arrayofcolorseditorbutton.h \
     guimakerscene.h \
     stateseditor.h \
-    langstrategy.h
+    langstrategy.h \
+    undoRedoCommands.h
 
 
 FORMS    += mainwindow.ui

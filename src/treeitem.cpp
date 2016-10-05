@@ -135,6 +135,7 @@ void TreeItem::init()
 //          key events are only received for items that set the ItemIsFocusable flag
 //          setFlag(QGraphicsItem::ItemIsFocusable, true);
 
+          myOldPos = pos();
 }
 
 
@@ -421,10 +422,20 @@ QVariant TreeItem::itemChange(GraphicsItemChange change, const QVariant &value)
     return QGraphicsItem::itemChange(change, value);
 }
 
+QPointF TreeItem::oldPos() const
+{
+    return myOldPos;
+}
+
+void TreeItem::setOldPos(const QPointF &value)
+{
+    myOldPos = value;
+}
+
 //Executes contex menu for selected items
 void TreeItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-//    scene()->clearSelection();
+    //    scene()->clearSelection();
 //    setSelected(true);
     myContextMenu->exec(event->screenPos());
 }
@@ -537,13 +548,19 @@ void TreeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
         if(whichToggle(event->pos().x(), event->pos().y()))
             m_mode = ResizeTheElement;
         else
-            m_mode = MoveTheElement;
-        // copy
-        if( event->modifiers() & Qt::ShiftModifier )
         {
-            MainWindow *pMainWindow = MainWindow::getInstance();
-            pMainWindow->shiftCopyOfItemMake();
+            m_mode = MoveTheElement;
 
+//            myOldPos = pos();
+
+            // copy
+//            ToDo- move this to GuiMakerScene::mousePressEvent ?
+            if( event->modifiers() & Qt::ShiftModifier )
+            {
+                MainWindow *pMainWindow = MainWindow::getInstance();
+                pMainWindow->shiftCopyOfItemMake();
+
+            }
         }
 
 

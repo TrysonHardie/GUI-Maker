@@ -44,6 +44,8 @@ class CentralSubWindow;
 
 class AbstractLangStrategy;
 
+class QUndoStack;
+
 //class CentralSubWindow;
 namespace Ui {
 class MainWindow;
@@ -88,6 +90,10 @@ public slots:
 
 
     void shiftCopyOfItemMake();
+
+    void itemMoved(TreeItem *movedItem, const QPointF &oldPosition);
+    void itemMoved(QVector<TreeItem *> treeItems);
+
 private slots:
     void loadImages();
     void reloadImages();
@@ -114,7 +120,9 @@ private slots:
     void setCodeText(const int &pagenumber);
     QString sign();
 
+    void realDeleteItem();
     void deleteItem();
+//    void addItem();
 
     void about();
 private:
@@ -153,6 +161,8 @@ private:
     QMenu *itemMenu;
 
     CentralSubWindow *subWindow1;
+
+    QUndoStack *undoStack;
 };
 
 

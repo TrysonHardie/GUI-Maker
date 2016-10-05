@@ -234,3 +234,54 @@ void GuiMakerScene::keyPressEvent(QKeyEvent* ke )
 
 
 }
+
+void GuiMakerScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+//    QPointF mousePos(event->buttonDownScenePos(Qt::LeftButton).x(),
+//                     event->buttonDownScenePos(Qt::LeftButton).y());
+//    const QList<QGraphicsItem *> itemList = items(mousePos);
+//    movingItem = itemList.isEmpty() ? 0 : itemList.first();
+
+//    if (movingItem != 0 && event->button() == Qt::LeftButton) {
+//        oldPos = movingItem->pos();
+//    }
+
+//    clearSelection();//Bug- multiply selection don't work
+
+    if (event->button() == Qt::LeftButton) {
+        foreach (QGraphicsItem *item, selectedItems()) {
+            TreeItem *movingItem = qgraphicsitem_cast<TreeItem *>(item);
+
+            if(movingItem)
+            {
+                movingItem->setOldPos(movingItem->pos());
+            }
+        }
+    }
+
+    QGraphicsScene::mousePressEvent(event);
+}
+
+void GuiMakerScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        QVector<TreeItem *> itemList;
+
+        foreach (QGraphicsItem *item, selectedItems()) {
+            TreeItem *movingItem = qgraphicsitem_cast<TreeItem *>(item);
+
+            if(movingItem && movingItem->oldPos() != movingItem->pos())
+            {
+//                movingItem->setOldPos(movingItem->pos());
+                itemList.append(movingItem);
+            }
+        }
+
+        if(!itemList.isEmpty())
+            emit itemMoved(itemList);
+
+        movingItem = 0;
+    }
+    QGraphicsScene::mouseReleaseEvent(event);
+}
+

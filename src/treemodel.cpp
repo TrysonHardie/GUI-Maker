@@ -333,7 +333,7 @@ void TreeModel::clear()
 
 }
 
-//---bug and unused..
+
 bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
 {
 //    TreeItem *parentItem = getItem(parent);

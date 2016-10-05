@@ -20,8 +20,9 @@
 #ifndef GUIMAKERSCENE_H
 #define GUIMAKERSCENE_H
 
-
 #include <QGraphicsScene>
+
+class TreeItem;
 
 class GuiMakerScene : public QGraphicsScene
 {
@@ -41,14 +42,23 @@ protected:
 //        void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void drawBackground(QPainter *painter, const QRectF &rect);
     void keyPressEvent(QKeyEvent *ke);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) Q_DECL_OVERRIDE;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) Q_DECL_OVERRIDE;
 signals:
       void itemSelected(QGraphicsItem *item);
+      void itemMoved(TreeItem *movedItem, const QPointF &movedFromPosition);
+      void itemMoved(QVector<TreeItem *> treeItems);
+
 private:
 
     inline bool hasItems() const
     {
         return !items().isEmpty();
     }
+
+    QGraphicsItem *movingItem;
+    QPointF oldPos;
 
 };
 
