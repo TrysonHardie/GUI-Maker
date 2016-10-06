@@ -3,7 +3,9 @@
 It is a free graphical app, that helps to create GUI in some programming languages (SuperCollider, AutoIt) faster. This code-generation tool written in C++ with the Qt5 framework.
 By using GUI maker it's realy easy to create a graphical user interfaces: just drag elements, set parameters and, guess what, you're done.
 
-[Homepage](https://www.trysohard.info/GUI-Maker/)<br>
+[Homepage](http://trysohard.info/GUI-Maker/)<br>
+
+[Video](https://youtu.be/SeF3GWO346Y)<br>
 
 ## Mission:
 ***
@@ -32,6 +34,7 @@ PopUpMenu(w, Rect(50,229, 128,32))
 ```
 
 With GUI Maker - just 6 sec. Drag  Button,Knob,NumberBox,Slider,PopUpMenu, and press CopyCode.
+
 ![GUI_Maker Screenshot](src/data/screenshots/GUI_Maker_screenshot.png?raw=true)
 
 ## Features:
@@ -58,7 +61,7 @@ With GUI Maker - just 6 sec. Drag  Button,Knob,NumberBox,Slider,PopUpMenu, and p
 
 ## License:
 ***
-Copyright (c) 2016 by [Tryson Hardie](https://www.trysohard.info/)<br>
+Copyright (c) 2016 by [Tryson Hardie](http://trysohard.info/)<br>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
