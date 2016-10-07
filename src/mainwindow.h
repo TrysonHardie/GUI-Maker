@@ -155,9 +155,6 @@ private:
     AbstractLangStrategy *m_currentLangStrategy;
     QVector<AbstractLangStrategy*> m_AllLangStrategies;
 
-    void loadSuperCollider(QString &fileName) const;
-    void loadAutoIt(QString fileName);
-
     QMenu *itemMenu;
 
     CentralSubWindow *subWindow1;

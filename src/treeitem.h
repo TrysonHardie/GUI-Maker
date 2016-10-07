@@ -34,6 +34,9 @@ class TreeItem : public QGraphicsRectItem
 {
     inline void init();
 
+    friend class SuperColliderLangStrategy;
+    friend class AutoItLangStrategy;
+
 public:
     TreeItem();
  //   TreeItem(TreeItem *parent=0 );
@@ -198,6 +201,7 @@ private:
 //    context menu
     QMenu *myContextMenu;
 
+    QString m_typeName;
     QString m_className;
     QString m_varName;
     QRect m_rect; // ??
@@ -280,6 +284,8 @@ private:
                             m_rect.bottom()-4),
                      QSize(7,7) );
     }
+
+
 
 
 };

@@ -40,7 +40,8 @@
 
 TreeItem::TreeItem() : QGraphicsRectItem(0)
     ,m_rect (QRect(0,0,60,90)),
-      m_mode (NothingToDo)
+      m_mode (NothingToDo),
+      m_typeName ("")
 {
     init();
 }
@@ -63,7 +64,7 @@ TreeItem::TreeItem(TreeItem *parent, bool root) : QGraphicsRectItem(parent)
 
 TreeItem::TreeItem(TreeItem *parent, const QString &classname, const QString &varname)
     : QGraphicsRectItem(0)
-    ,m_className (classname),
+    ,m_typeName (classname),
       m_varName (varname),
       m_rect (QRect(0,0,500,500)),
       m_mode (NothingToDo)
@@ -76,6 +77,7 @@ TreeItem::TreeItem(TreeItem *parent, const QString &classname, const QString &va
 //copy constructor -- TreeItem *parent - is needed to avoid collision of constructors
 TreeItem::TreeItem(TreeItem *olditem)
     : QGraphicsRectItem(olditem->parent()),
+      m_typeName (olditem->m_typeName),
       m_className (olditem->className()),
       //      m_varName (olditem->varName()), // name of variable must be uniq
       m_rect (olditem->rect()),
@@ -124,9 +126,16 @@ void TreeItem::init()
     MainWindow *pMainWindow = MainWindow::getInstance();
     if (pMainWindow) {
         myContextMenu = pMainWindow->menuOfItem();
+
+        m_className = m_typeName;
+                pMainWindow->getCurrLangStrategy()->translateName(m_className);
+
     }
     else
+    {
         myContextMenu = 0;
+        m_className = "";
+    }
 
     setRect(m_rect);
           setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -268,7 +277,13 @@ bool TreeItem::setData(int column, const QVariant &className, const QVariant &re
 
     if (column == 0)
     {
-        m_className = className.toString();
+        m_typeName = className.toString();
+        MainWindow *pMainWindow = MainWindow::getInstance();
+        if (pMainWindow) {
+            m_className = m_typeName;
+                    pMainWindow->getCurrLangStrategy()->translateName(m_className);
+        }
+
         init_methods();
 
 //        ToDo- AutoIt support
@@ -440,7 +455,6 @@ void TreeItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     myContextMenu->exec(event->screenPos());
 }
 
-//    ToDo- AutoIt support
 void TreeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
 //    draw the Pixmap
@@ -460,83 +474,12 @@ void TreeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
 //    painter->setPen(Qt::black);
 //    painter->drawText(m_rect, QString::number((pos().x())));
 
-
-    MainWindow *pMainWindow = MainWindow::getInstance();
-//        int lang = pMainWindow->getCurrentLang();
-//        switch (lang) {
-// //        case MainWindow::SuperCollider:
-// //            return result = get_info_SuperCollider(richText);
-// //            break;
-//        case MainWindow::AutoIt: //        AutoIt is not supported
-//            return;
-
-//            break;
-//        default:
-//            break;
-//        }
-
-
-
     //    ---Draw Text
-
     painter->setFont(QFont("DejaVu Sans Mono", 14));
 
-    if( pMainWindow->getCurrLangStrategy()->get_CurrentLangName() == "AutoIt"
-            &&  methods.at(0).property == "text"
-            && !methods.at(0).value.isEmpty())
-    {
-        painter->drawText(QPointF(10, m_rect.height()/2), methods.at(0).value);
-        return;
-
-    }
-
-    //    ToDo- complicated
-//    every element must be a class instead of QPixmap
-    if( m_className.contains( "Button" )){
-
-        //    we actually get: ["yes",Color.grey, Color.white], ["no",Color.white, Color.grey]
-
-        //        ---Find 'states' field and draw  a substring of first state
-
-        const int j = 1; // index of 'states' field
-        if(methods.at(j).value != "")
-        {
-            //                       get substring ... ["yes "] ... ["yes ",C olor
-            int lastSymbolWeNeed = methods.at(j).value.indexOf("\"]");
-            if(lastSymbolWeNeed == -1)
-                lastSymbolWeNeed = methods.at(j).value.indexOf("\",C");
-
-            QString stateStr = methods.at(j).value.left(lastSymbolWeNeed).remove(0,2);
-
-            painter->drawText(QPointF(10, m_rect.height()/2), stateStr);
-
-        }
-        //                draw inner boundary of Button
-        QPen pen(QColor(50,90,255), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-        painter->setPen(pen );
-
-        painter->setBrush(Qt::NoBrush);
-
-        QRectF rectrect(2,2, m_rect.width()-2, m_rect.height()-2) ;
-        painter->drawRect(rectrect);
-    }
-//   if StaticText
-    else if (m_className == "StaticText")
-    {
-        //    ToDo- painter->setFont(QFont(methods.at(j).value));
-
-        if(methods.at(0).value != "")
-            painter->drawText(QPointF(10, 15), methods.at(0).value);
-        else
-            painter->drawText(QPointF(10, 15), "StaticText");
-
-    }
-    else //    add StaticText to CompositeView. methods.at(0).value - its a string
-        if (m_className == "CompositeView" && methods.at(0).value != "")
-    {
-        painter->drawText(QPointF(10, 15), methods.at(0).value);
-    }
-
+    MainWindow *pMainWindow = MainWindow::getInstance();
+    pMainWindow->getCurrLangStrategy()->
+            paintElement(this, painter);
 
 }
 
@@ -688,7 +631,7 @@ QString TreeItem::get_info(bool richText) const
 }
 
 //hard
-//    ToDo- every element in 'methods' must be a class instead of QPixmap
+//    ToDo- move it to the strategy class?..
 QString TreeItem::get_info_SuperCollider(const bool &richText) const
 {
     QString classTag, methodTag,methodTag2, br, varname;
@@ -740,9 +683,10 @@ QString TreeItem::get_info_SuperCollider(const bool &richText) const
                         colorTag = "<font color="+colorTag+">" + colorTag + methodTag2;
                     text.append("." + methodTag +methods.at(indexOfBackground).property+ methodTag2 +
                                 "_(Color.fromHexString(\"" + colorTag +  "\"))"+br);
-                    break;
 
                 }
+                break;
+
             }
         }
 
@@ -891,7 +835,7 @@ QString TreeItem::get_info_AutoIt(const bool &richText) const
 
         //name of variable
         if (m_varName != "")
-            varname = "Local " + m_varName+" = ";
+            varname = "Local $" + m_varName+" = ";
 
     //    Constructor
     //    Local $idClose = GUICtrlCreateButton("Close",  210, 170, 85, 25)
@@ -988,9 +932,8 @@ QString TreeItem::parentItemvarName() const
     }
     else
         return "w";
-//ToDo- possibility to change varName of main window. not "w" everytime
+    //ToDo- possibility to change varName of main window. not "w" everytime
 }
-
 
 //get string representation of items rectangle - "20, 20, 340, 30"
 QString TreeItem::rect_of_element() const

@@ -56,39 +56,25 @@ void GuiMakerScene::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
 
 void GuiMakerScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 {
+
     if (event->mimeData()->hasFormat("image/x-gui-element")) {
+        MainWindow *pMainWindow = MainWindow::getInstance();
+        if (!pMainWindow) {return;}
 
         QByteArray pieceData = event->mimeData()->data("image/x-gui-element");
                 QDataStream stream(&pieceData, QIODevice::ReadOnly);
 
 //                QPoint offset;
                 QPixmap pixmap;
-                QString textData = event->mimeData()->data("text/plain");
+                QString nameOfelement = event->mimeData()->data("text/plain");
 
 
-
-                MainWindow *pMainWindow = MainWindow::getInstance();
-                if (!pMainWindow) {return;}
+//                if AutoIt -> we need to change name of element
+                pMainWindow->getCurrLangStrategy()->translateName(nameOfelement);
 
 //                create blank pixmap, for drawing text on it
-                    if (!pMainWindow->getCurrLangStrategy()->recreatePixmap(textData, pixmap))
+                    if (!pMainWindow->getCurrLangStrategy()->recreatePixmap(nameOfelement, pixmap))
                         stream >> pixmap ;
-
-//                    qDebug() << " " << pixmap.size() ;
-
-//                if (textData == "StaticText"
-//                        || textData == "Button")
-//                {
-//                    pixmap = QPixmap(128, 36);
-//                    pixmap.fill(Qt::white);
-//                }
-//                else if (textData == "CompositeView")
-//                {
-//                    pixmap = QPixmap(192, 128);
-//                    pixmap.fill(Qt::gray);
-//                }
-//                else
-//                    stream >> pixmap /*>> offset*/;
 
                     int x = event->scenePos().x();
                     int y = event->scenePos().y();
@@ -98,8 +84,10 @@ void GuiMakerScene::dropEvent(QGraphicsSceneDragDropEvent *event)
 
 //                ---addItem
 
+//                    QString typeOfelement = event->mimeData()->data("text/plain");
+
                     TreeItem *item =
-                            pMainWindow->insertRowInAModels(event->mimeData()->data("text/plain"), square);
+                            pMainWindow->insertRowInAModels(nameOfelement, square);
 
                     item->setPixmap(pixmap);
                     item->setPos(QPointF(x, y));

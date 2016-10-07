@@ -21,6 +21,9 @@
 #include "mainwindow.h"
 #include "treeitem.h"
 #include "guimakerscene.h"
+#include "treeitem.h"
+
+#include <QPainter>
 
 const QString signa = "Generated with " GUI_MAKER_TITLE " " GUI_MAKER_SITE " " ;
 
@@ -126,6 +129,87 @@ bool SuperColliderLangStrategy::recreatePixmap(const QString &textData, QPixmap 
     return true;
 }
 
+void SuperColliderLangStrategy::translateName (QString &nameOfElement)
+{
+//    Are u sure about that?
+    return;
+}
+
+void SuperColliderLangStrategy::paintElement(const TreeItem *t, QPainter *painter)
+{
+    const QString& m_typeName = t->m_typeName;
+    const QList<TreeItem::Method>& methods = t->methods;
+    const QRect& m_rect = t->m_rect;
+
+    //    ToDo- complicated?
+    if( m_typeName.contains( "Button" )){
+
+        //    we actually get: ["yes",Color.grey, Color.white], ["no",Color.white, Color.grey]
+
+        //        ---Find 'states' field and draw  a substring of first state
+
+        const int j = 1; // index of 'states' field
+        if(methods.at(j).value != "")
+        {
+            //                       get substring ... ["yes "] ... ["yes ",C olor
+            int lastSymbolWeNeed = methods.at(j).value.indexOf("\"]");
+            if(lastSymbolWeNeed == -1)
+                lastSymbolWeNeed = methods.at(j).value.indexOf("\",C");
+
+            QString stateStr = methods.at(j).value.left(lastSymbolWeNeed).remove(0,2);
+
+            painter->drawText(QPointF(10, m_rect.height()/2), stateStr);
+
+        }
+        //                draw inner boundary of a Button
+        QPen pen(QColor(50,90,255), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        painter->setPen(pen );
+
+        painter->setBrush(Qt::NoBrush);
+
+        QRectF rectrect(2,2, m_rect.width()-2, m_rect.height()-2) ;
+        painter->drawRect(rectrect);
+    }
+    else if (m_typeName == "StaticText")
+    {
+        //    ToDo- painter->setFont(QFont(methods.at(j).value));
+
+        if(methods.at(0).value != "")
+            painter->drawText(QPointF(10, 15), methods.at(0).value);
+        else
+            painter->drawText(QPointF(10, 15), "StaticText");
+
+    }
+    else //    add StaticText to CompositeView. methods.at(0).value - its a string
+        if (m_typeName == "CompositeView" )
+        {
+
+            // fill background
+            //        ---Find 'background' field
+            for (int indexOfBackground = 0; indexOfBackground < methods.size(); ++indexOfBackground) {
+                if( methods.at(indexOfBackground).property.contains("background", Qt::CaseInsensitive))
+                {
+                    if( methods.at(indexOfBackground).value != "" )
+                    {
+                        QString backgroundColor = methods.at(indexOfBackground).value;
+//                        QColor bkColor = QColor(backgroundColor);
+//                        bkColor.setNamedColor(backgroundColor);
+                        painter->fillRect(m_rect, QColor(backgroundColor));
+
+                    }
+                    break;
+
+                }
+            }
+
+            // draw text
+            if(methods.at(0).value != "")
+                painter->drawText(QPointF(10, 15), methods.at(0).value);
+
+        }
+
+}
+
 
 
 //---AutoIt language
@@ -187,6 +271,7 @@ QString AutoItLangStrategy::get_Window(bool richText) const
     resultText.append(QString("GUISetState(@SW_SHOW, $%2)%1While 1%1Switch GUIGetMsg()%1Case $GUI_EVENT_CLOSE %1ExitLoop%1EndSwitch%1WEnd%1%1"
 ).arg(br).arg(mainWindowVarName));
 
+
     return resultText;
 }
 
@@ -209,4 +294,64 @@ bool AutoItLangStrategy::recreatePixmap(const QString &textData, QPixmap &pixmap
         return false;
 
     return true;
+}
+
+void AutoItLangStrategy::translateName(QString& nameOfElement)
+{
+    if(nameOfElement.isEmpty())
+        return;
+
+    //    convert fileName
+    if (nameOfElement == "Button")
+        nameOfElement = "GUICtrlCreateButton";
+    else if (nameOfElement == "ListView")
+        nameOfElement = "GUICtrlCreateList";
+    else if (nameOfElement == "StaticText")
+        nameOfElement = "GUICtrlCreateLabel";
+
+    else if (nameOfElement == "CheckBox")
+        nameOfElement = "GUICtrlCreateCheckBox";
+    else if (nameOfElement == "Knob")
+        return;
+//        nameOfElement = "";
+    else if (nameOfElement == "NumberBox")
+        return;
+//        nameOfElement = "";
+
+    else if (nameOfElement == "PopUpMenu")
+        return;
+//        nameOfElement = "GUICtrlCreateCombo";
+    else if (nameOfElement == "Slider")
+        nameOfElement = "GUICtrlCreateSlider";
+    else if (nameOfElement == "TextField")
+        nameOfElement = "GUICtrlCreateEdit";
+    else
+        return;
+//    else if (nameOfElement == "CompositeView")
+//        nameOfElement = "";
+
+}
+
+void AutoItLangStrategy::paintElement(const TreeItem *t, QPainter *painter)
+{
+    const QString& m_typeName = t->m_typeName;
+    const QList<TreeItem::Method>& methods = t->methods;
+    const QRect& m_rect = t->m_rect;
+
+    if( methods.at(0).property == "text"
+            && !methods.at(0).value.isEmpty())
+    {
+        painter->drawText(QPointF(10, m_rect.height()/2), methods.at(0).value);
+    }
+    if( m_typeName.contains( "Button" )){
+        //                draw inner boundary of a Button
+        QPen pen(QColor(50,90,255), 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+        painter->setPen(pen );
+
+        painter->setBrush(Qt::NoBrush);
+
+        QRectF rectrect(2,2, m_rect.width()-2, m_rect.height()-2) ;
+        painter->drawRect(rectrect);
+    }
+
 }

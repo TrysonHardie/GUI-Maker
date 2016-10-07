@@ -125,52 +125,33 @@ MainWindow *MainWindow::getInstance (void)
 
 void MainWindow::loadImages()
 {
+    //    ToDo- put all file-names from :/data/img/GUIelements/ to this List
+    QStringList fnames;
 
-//    loadImage("Button");
-//    loadImage("ListView");
-//    loadImage("StaticText");
+//    AutoIt can't handle some of elements
+    if(m_currentLangStrategy->get_CurrentLangName() == "AutoIt")
+        fnames.append({"Button", "ListView", "StaticText",
+                  "CheckBox",
+                  "Slider", "TextField"
 
-//    loadImage("CheckBox");
-//    loadImage("Knob");
-//    loadImage("NumberBox");
+                 });
+    else
+        fnames.append({"Button", "ListView", "StaticText",
+                  "CheckBox", "Knob", "NumberBox",
+                  "PopUpMenu", "Slider", "TextField",
+                  "CompositeView"
+                 });
 
-//    loadImage("PopUpMenu");
-//    loadImage("Slider");
-//    loadImage("TextField");
+    //    load Images
+    foreach (QString fileName, fnames) {
+        QPixmap newImage;
+        if (newImage.load(":/data/img/GUIelements/" + fileName + ".png"))
+            model->addPiece(newImage, fileName);
 
-//    //        CompositeView + StaticText
-//    loadImage("CompositeView");
-
-
-    QStringList fnames = {"Button", "ListView", "StaticText",
-                        "CheckBox", "Knob", "NumberBox",
-                        "PopUpMenu", "Slider", "TextField",
-                        "CompositeView"
-                        };
-
-//    ToDo- here must be a Starategy
-//    m_currentLangStrategy->loadPixmap(fileName);
-
-    switch (getCurrentLang()) {
-
-    case MainWindow::SuperCollider:
-
-        foreach (QString fileName, fnames) {
-            loadSuperCollider(fileName);
-        }
-        break;
-
-    case MainWindow::AutoIt:
-
-        foreach (QString fileName, fnames) {
-            loadAutoIt(fileName);
-        }
-        break;
-
-    default:
-        break;
     }
+
 }
+
 
 void MainWindow::reloadImages()
 {
@@ -179,57 +160,9 @@ void MainWindow::reloadImages()
 }
 
 
-void MainWindow::loadSuperCollider(QString &fileName) const
-{
-    QPixmap newImage;
-
-//    load Image
-    if (!newImage.load(":/data/img/GUIelements/" + fileName + ".png")) {
-        return;
-    }
-    model->addPiece(newImage, fileName);
-}
-
-void MainWindow::loadAutoIt(QString fileName)
-{
-    QPixmap newImage;
-
-//    load Image
-    if (!newImage.load(":/data/img/GUIelements/" + fileName + ".png")) {
-        return;
-    }
-
-    //    convert fileName
-    if (fileName == "Button")
-        fileName = "GUICtrlCreateButton";
-    else if (fileName == "ListView")
-        fileName = "GUICtrlCreateList";
-    else if (fileName == "StaticText")
-        fileName = "GUICtrlCreateLabel";
-
-    else if (fileName == "CheckBox")
-        fileName = "GUICtrlCreateCheckBox";
-    else if (fileName == "Knob")
-        return;
-//        fileName = "";
-    else if (fileName == "NumberBox")
-        return;
-//        fileName = "";
-
-    else if (fileName == "PopUpMenu")
-        return;
-//        fileName = "GUICtrlCreateCombo";
-    else if (fileName == "Slider")
-        fileName = "GUICtrlCreateSlider";
-    else if (fileName == "TextField")
-        fileName = "GUICtrlCreateEdit";
-    else return;
-//    else if (fileName == "CompositeView")
-//        fileName = "";
 
 
-    model->addPiece(newImage, fileName);
-}
+
 
 
 void MainWindow::setupWidgets()
@@ -836,6 +769,8 @@ void MainWindow::on_actionSave_triggered()
     QFileDialog dialog(this);
     dialog.setWindowModality(Qt::WindowModal);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
+    dialog.setNameFilter(QString("Source files (*.%1)").arg(m_currentLangStrategy->get_extention())); // tr("Source files (*.au3 *.sc *.cpp)")
+
     if (dialog.exec() != QDialog::Accepted)
         return;
     saveFile(dialog.selectedFiles().first());

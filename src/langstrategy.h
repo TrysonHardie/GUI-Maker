@@ -27,6 +27,7 @@ class GuiMakerScene;
 class TreeItem;
 
 class QPixmap;
+class QPainter;
 
 //---about
 #define GUI_MAKER_SITE         "http://trysohard.info/GUI-Maker/"
@@ -50,6 +51,7 @@ public:
 //    using by TreeItem
     virtual QString get_sourceCode(const TreeItem *treeItem, const bool &richText) const = 0;
     /*virtual*/ QString get_pathToScFile (const QString& name ) const;
+    virtual void paintElement(const TreeItem *t, QPainter *painter) = 0;
 
     //    using by mainwindow
     /*virtual*/ QString get_extention ( ) const;
@@ -59,6 +61,7 @@ public:
     //    using by Scene
     virtual QString get_Window (bool richText ) const = 0;
     virtual bool recreatePixmap (const QString& textData, QPixmap &pixmap ) const = 0;
+    virtual void translateName (QString& nameOfElement) = 0;
 
     //    using by SettingsDialog
     /*virtual*/ QString get_CurrentLangName ( ) const;
@@ -80,6 +83,9 @@ public:
     QString get_commentedSignature() const;
     QString get_Window(bool richText) const;
     bool recreatePixmap (const QString& textData, QPixmap &pixmap) const;
+    void translateName(QString& nameOfElement);
+
+    void paintElement(const TreeItem *t, QPainter *painter);
 };
 
 
@@ -97,6 +103,9 @@ public:
     QString get_commentedSignature() const;
     QString get_Window(bool richText) const;
     bool recreatePixmap (const QString& textData, QPixmap &pixmap) const;
+    void translateName (QString &nameOfElement);
+
+    void paintElement(const TreeItem *t, QPainter *painter);
 };
 
 #endif // LANGSTRATEGY_H
