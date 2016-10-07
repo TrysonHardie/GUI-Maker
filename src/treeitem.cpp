@@ -900,6 +900,18 @@ QString TreeItem::get_info_AutoIt(const bool &richText) const
 
         text.append(br);
 
+        //; ---Display the GUI.
+        //    ; Loop until the user exits.
+        //    While 1
+        //        Switch GUIGetMsg()
+        //            Case $GUI_EVENT_CLOSE
+        //                ExitLoop
+
+        //        EndSwitch
+        //    WEnd
+        text.append(QString("While 1%1Switch GUIGetMsg()%1Case $GUI_EVENT_CLOSE %1ExitLoop%1EndSwitch%1WEnd%1%1"
+    ).arg(br));
+
         return text;
     }
 

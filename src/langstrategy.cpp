@@ -258,19 +258,9 @@ QString AutoItLangStrategy::get_Window(bool richText) const
         br= "\n";
     }
 
-    //; ---Display the GUI.
     //        GUISetState(@SW_SHOW, $hGUI)
-    //    ; Loop until the user exits.
-    //    While 1
-    //        Switch GUIGetMsg()
-    //            Case $GUI_EVENT_CLOSE
-    //                ExitLoop
-
-    //        EndSwitch
-    //    WEnd
-    resultText.append(QString("GUISetState(@SW_SHOW, $%2)%1While 1%1Switch GUIGetMsg()%1Case $GUI_EVENT_CLOSE %1ExitLoop%1EndSwitch%1WEnd%1%1"
+    resultText.append(QString("GUISetState(@SW_SHOW, $%2)%1"
 ).arg(br).arg(mainWindowVarName));
-
 
     return resultText;
 }
