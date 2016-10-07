@@ -54,7 +54,6 @@ With GUI Maker - just 6 sec. Drag  Button,Knob,NumberBox,Slider,PopUpMenu, and p
 ## Disadvanteges
 ***
 * Elements represented by Pixmaps, so you can't see some changes: color, font etc.
-* No Undo/Redo
 * No binary
 * This is not a TextEditor
 
