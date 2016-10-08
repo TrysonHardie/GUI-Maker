@@ -74,7 +74,7 @@ QString SuperColliderLangStrategy::get_commentedSignature() const
 }
 
 //Window("w", Rect(470, 0, 290, 230));
-QString SuperColliderLangStrategy::get_Window(bool richText) const
+QString SuperColliderLangStrategy::get_Window(const bool richText) const
 {
     QString resultText, mainWindowVarName;
     mainWindowVarName = "w";
@@ -232,7 +232,7 @@ QString AutoItLangStrategy::get_commentedSignature() const
 }
 
 // Local $hGUI = GUICreate("gui", 300, 200)
-QString AutoItLangStrategy::get_Window(bool richText) const
+QString AutoItLangStrategy::get_Window(const bool richText) const
 {
 
     QString resultText, br, mainWindowVarName, constants;
@@ -252,14 +252,14 @@ QString AutoItLangStrategy::get_Window(bool richText) const
     }
     else
     {
-        resultText =constants + "\nLocal $"+ mainWindowVarName +" = GUICreate(\"gui\", "+
+        resultText =constants + "\n\nLocal $"+ mainWindowVarName +" = GUICreate(\"gui\", "+
                 m_pMainWindow->subWindow_width_height()+
                 ")\n";
         br= "\n";
     }
 
     //        GUISetState(@SW_SHOW, $hGUI)
-    resultText.append(QString("GUISetState(@SW_SHOW, $%2)%1"
+    resultText.append(QString("GUISetState(@SW_SHOW, $%2)%1%1"
 ).arg(br).arg(mainWindowVarName));
 
     return resultText;
@@ -343,5 +343,32 @@ void AutoItLangStrategy::paintElement(const TreeItem *t, QPainter *painter)
         QRectF rectrect(2,2, m_rect.width()-2, m_rect.height()-2) ;
         painter->drawRect(rectrect);
     }
+
+}
+
+QString AutoItLangStrategy::get_endCode(const bool richText) const
+{
+    QString resultText, br;
+
+    if( richText )
+    {
+        br = "<br>";
+    }
+    else
+    {
+        br= "\n";
+    }
+    //; ---Display the GUI.
+    //    ; Loop until the user exits.
+    //    While 1
+    //        Switch GUIGetMsg()
+    //            Case $GUI_EVENT_CLOSE
+    //                ExitLoop
+    //        EndSwitch
+    //    WEnd
+    resultText.append(QString("While 1%1Switch GUIGetMsg()%1Case $GUI_EVENT_CLOSE %1ExitLoop%1EndSwitch%1WEnd%1%1"
+).arg(br));
+
+    return resultText;
 
 }

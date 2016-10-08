@@ -769,7 +769,7 @@ void MainWindow::on_actionSave_triggered()
     QFileDialog dialog(this);
     dialog.setWindowModality(Qt::WindowModal);
     dialog.setAcceptMode(QFileDialog::AcceptSave);
-    dialog.setNameFilter(QString("Source files (*.%1)").arg(m_currentLangStrategy->get_extention())); // tr("Source files (*.au3 *.sc *.cpp)")
+    dialog.setNameFilter(QString("Source files (*%1)").arg(m_currentLangStrategy->get_extention())); // tr("Source files (*.au3 *.sc *.cpp)")
 
     if (dialog.exec() != QDialog::Accepted)
         return;

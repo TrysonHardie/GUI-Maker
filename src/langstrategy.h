@@ -59,7 +59,7 @@ public:
     //loadSuperCollider(fileName) = 0;
 
     //    using by Scene
-    virtual QString get_Window (bool richText ) const = 0;
+    virtual QString get_Window (const bool richText ) const = 0;
     virtual bool recreatePixmap (const QString& textData, QPixmap &pixmap ) const = 0;
     virtual void translateName (QString& nameOfElement) = 0;
 
@@ -81,7 +81,7 @@ public:
 public:
     QString get_sourceCode(const TreeItem *treeItem, const bool &richText) const;
     QString get_commentedSignature() const;
-    QString get_Window(bool richText) const;
+    QString get_Window(const bool richText) const;
     bool recreatePixmap (const QString& textData, QPixmap &pixmap) const;
     void translateName(QString& nameOfElement);
 
@@ -101,11 +101,14 @@ public:
 public:
     QString get_sourceCode(const TreeItem *treeItem, const bool &richText) const;
     QString get_commentedSignature() const;
-    QString get_Window(bool richText) const;
+    QString get_Window(const bool richText) const;
     bool recreatePixmap (const QString& textData, QPixmap &pixmap) const;
     void translateName (QString &nameOfElement);
 
     void paintElement(const TreeItem *t, QPainter *painter);
+
+    // AutoItLangStrategy interface
+    QString get_endCode(const bool richText) const;
 };
 
 #endif // LANGSTRATEGY_H

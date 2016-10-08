@@ -162,6 +162,10 @@ QString GuiMakerScene::getText(bool richText)
 //            resultText.append(element->get_info(richText));
     }
 
+//    add specific ending
+    if (AutoItLangStrategy* au3 = static_cast<AutoItLangStrategy*>(lang))
+        resultText.append(au3->get_endCode(richText));
+
 
     return resultText;
 }
