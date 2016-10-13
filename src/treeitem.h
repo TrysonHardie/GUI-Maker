@@ -79,8 +79,6 @@ public:
 
     QString get_info(bool richText = false) const;
 
-    QString get_info_AutoIt(const bool &richText) const;
-    QString get_info_SuperCollider(const bool &richText) const;
 
     bool isContainerOfViews() const
     {

@@ -163,7 +163,7 @@ QString GuiMakerScene::getText(bool richText)
     }
 
 //    add specific ending
-    if (AutoItLangStrategy* au3 = static_cast<AutoItLangStrategy*>(lang))
+    if (AutoItLangStrategy* au3 = dynamic_cast<AutoItLangStrategy*>(lang))
         resultText.append(au3->get_endCode(richText));
 
 
