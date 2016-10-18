@@ -3,9 +3,11 @@
 It is a free graphical app, that helps to create GUI in some programming languages (SuperCollider, AutoIt) faster. This code-generation tool written in C++ with the Qt5 framework.
 By using GUI maker it's realy easy to create a graphical user interfaces: just drag elements, set parameters and, guess what, you're done.
 
-[Homepage](http://trysohard.info/GUI-Maker/)<br>
+Videos:
+* [AutoIt Calculator](https://youtu.be/PYTdHDhPhcs)<br>
+* [SuperCollider Calculator](https://youtu.be/SeF3GWO346Y)<br>
 
-[Video](https://youtu.be/SeF3GWO346Y)<br>
+[Homepage](http://trysohard.info/GUI-Maker/)<br>
 
 ## Mission:
 ***
