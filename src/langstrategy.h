@@ -69,6 +69,9 @@ public:
 //    QString get_ ( ) const = 0;
 };
 
+class QColor;
+class QFont;
+
 //---SuperCollider language
 class SuperColliderLangStrategy : public AbstractLangStrategy
 {
@@ -86,6 +89,11 @@ public:
     void translateName(QString& nameOfElement);
 
     void paintElement(const TreeItem *t, QPainter *painter);
+private:
+    inline QString getStringField(const TreeItem *t) const;
+    QColor getStringColor(const TreeItem *t) const;
+    QFont getFont(const TreeItem *t) const;
+    inline QString getRectOfElement(const TreeItem *t) const;
 };
 
 

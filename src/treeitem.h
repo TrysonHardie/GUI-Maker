@@ -120,7 +120,6 @@ public:
 
     //---GuiElement
     QString className() const;
-    QString rectStr() const;
 
     inline const QPixmap & get_pixmap() const
     {
@@ -151,7 +150,7 @@ public:
     }
 
 
-//    --------- Rect edition
+    //    ---
 
     QString rect_of_element() const;
 
@@ -232,6 +231,7 @@ private:
     };
 
     QList<Method> methods;
+    QString getProperty(const QString& propertyName) const;
     void parse_schelp_for_Methods(const QString &name);
 
 
@@ -287,8 +287,6 @@ private:
 
 
 };
-
-//typedef QList<TreeItem*> VectorOfElements;
 
 
 #endif // TREEITEM_H

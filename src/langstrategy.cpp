@@ -101,62 +101,37 @@ QString SuperColliderLangStrategy::get_sourceCode(const TreeItem *treeItem, cons
     }
 
     //    Constructor - m = PopUpMenu(w,Rect(10,10,180,20))
-    QString text(varname + classTag + "(" + treeItem->parentItemvarName() +
-                 ", Rect(" + treeItem->rect_of_element() + "))"+br);
+    QString text(varname + classTag + getRectOfElement(treeItem) +br);
 
     //    add StaticText to CompositeView
     if (m_className == "CompositeView")
     {
-        //        ---Find 'background' field
-        //        int indexOfBackground = methods.indexOf("background");//        need an implementation of operator==()
-        for (int indexOfBackground = 0; indexOfBackground < methods.size(); ++indexOfBackground) {
-            if( methods.at(indexOfBackground).property.contains("background", Qt::CaseInsensitive))
-            {
-                if( methods.at(indexOfBackground).value != "" )
-                {
-                    QString colorTag = methods.at(indexOfBackground).value;
-                    if (richText)
-                        colorTag = "<font color="+colorTag+">" + colorTag + methodTag2;
-                    text.append("." + methodTag +methods.at(indexOfBackground).property+ methodTag2 +
-                                "_(Color.fromHexString(\"" + colorTag +  "\"))"+br);
 
-                }
-                break;
-
-            }
-        }
-
-
-
-        //        ---Find 'background' field
-        //ToDO- complicated!
-        //        ---get font size -
         //        if string is empty - dont add StaticText
-        if (!methods.at(0).value.isEmpty())
+        if (!treeItem->getProperty("string").isEmpty())
         {
-            //        1. Find 'Font' field in the methods. Now we get font = "12|Arial"
+            // background
+            QString colorTag = treeItem->getProperty("background");
+            if( colorTag != "" )
+            {
+                if (richText)
+                    colorTag = "<font color="+colorTag+">" + colorTag + methodTag2;
+                text.append("." + methodTag + "background" + methodTag2 +
+                            "_(Color.fromHexString(\"" + colorTag +  "\"))"+br);
 
-            //        int methodIndexposition = 4;//        is it 4?
-
-            for (int methodIndexposition = 0; methodIndexposition < methods.size(); ++methodIndexposition) {
-                if( methods.at(methodIndexposition).property.contains("Font", Qt::CaseInsensitive))
-                {
-                    QString fontSize("12");
-                    //        2. get (0) section of the string, separated by the ("|")
-                    if (methods.at(methodIndexposition).value != "")
-                    {
-                        fontSize = methods.at(methodIndexposition).value.section('|', 0, 0);
-                    }
-
-                    text.append(";StaticText(" + m_varName +
-                                ", Rect(10,10, " +QString::number(m_rect.width()) + "," + fontSize + "))"+br);
-                    break;
-
-                }
             }
 
+            // Find 'Font' field in the methods. e.g. "12|Arial"
+
+            QString fontSize = (treeItem->getProperty("font")).split('|').value(0);
+            if(fontSize.isEmpty())
+                fontSize = "12";
+
+            text.append(";StaticText(" + m_varName +
+                        ", Rect(10,10, " +QString::number(m_rect.width()) + "," + fontSize + "))"+br);
 
         }
+
     }
 
     //methods
@@ -316,6 +291,7 @@ bool SuperColliderLangStrategy::recreatePixmap(const QString &textData, QPixmap 
 void SuperColliderLangStrategy::translateName (QString &nameOfElement)
 {
 //    Are u sure about that?
+    Q_UNUSED(nameOfElement);
     return;
 }
 
@@ -332,7 +308,7 @@ void SuperColliderLangStrategy::paintElement(const TreeItem *t, QPainter *painte
 
         //        ---Find 'states' field and draw  a substring of first state
 
-        const int j = 1; // index of 'states' field
+        const int j = 1; // index of 'states' field; may use 't->getProperty("states");' instead
         if(methods.at(j).value != "")
         {
             //                       get substring ... ["yes "] ... ["yes ",C olor
@@ -356,41 +332,60 @@ void SuperColliderLangStrategy::paintElement(const TreeItem *t, QPainter *painte
     }
     else if (m_typeName == "StaticText")
     {
-        //    ToDo- painter->setFont(QFont(methods.at(j).value));
-
-        if(methods.at(0).value != "")
-            painter->drawText(QPointF(10, 15), methods.at(0).value);
-        else
-            painter->drawText(QPointF(10, 15), "StaticText");
+        painter->setFont(getFont(t));
+        painter->setPen(QPen(getStringColor(t)));
+        painter->drawText(QPointF(10, 15), getStringField(t));
 
     }
     else //    add StaticText to CompositeView. methods.at(0).value - its a string
         if (m_typeName == "CompositeView" )
         {
 
-            // fill background
-            //        ---Find 'background' field
-            for (int indexOfBackground = 0; indexOfBackground < methods.size(); ++indexOfBackground) {
-                if( methods.at(indexOfBackground).property.contains("background", Qt::CaseInsensitive))
-                {
-                    if( methods.at(indexOfBackground).value != "" )
-                    {
-                        QString backgroundColor = methods.at(indexOfBackground).value;
-//                        QColor bkColor = QColor(backgroundColor);
-//                        bkColor.setNamedColor(backgroundColor);
-                        painter->fillRect(m_rect, QColor(backgroundColor));
-
-                    }
-                    break;
-
-                }
-            }
+            QString backgroundColor = t->getProperty("background");
+            if(QColor::isValidColor(backgroundColor))
+                painter->fillRect(m_rect, QColor(backgroundColor));
 
             // draw text
-            if(methods.at(0).value != "")
-                painter->drawText(QPointF(10, 15), methods.at(0).value);
+            painter->setFont(getFont(t));
+            painter->setPen( QPen(getStringColor(t)));
+            painter->drawText(QPointF(10, 15), getStringField(t));
 
         }
+
+}
+
+QString SuperColliderLangStrategy::getStringField(const TreeItem *t)const
+{
+    return t->getProperty("string");
+}
+
+QColor SuperColliderLangStrategy::getStringColor(const TreeItem *t)const
+{
+
+    //        ---Find 'stringColor' field
+    QString color = t->getProperty("stringColor");
+
+    if(QColor::isValidColor(color))
+        return QColor(color);
+    else
+        return QColor(Qt::black);
+}
+
+QFont SuperColliderLangStrategy::getFont(const TreeItem *t) const
+{
+    //        ---Find 'font' field
+    QStringList fnt = (t->getProperty("font")).split('|');
+
+    if(fnt.size() > 1)
+        return QFont (fnt[1], fnt[0].toInt()); // QFont("Times", 10);
+    else
+        return QFont();
+}
+
+//return string -    (w, Rect(20, 20, 340, 30));
+QString SuperColliderLangStrategy::getRectOfElement(const TreeItem *t) const
+{
+    return QString("(" +  t->parentItemvarName() +", Rect(" +  t->rect_of_element() + "))");
 
 }
 

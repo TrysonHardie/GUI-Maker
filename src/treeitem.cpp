@@ -644,23 +644,11 @@ QString TreeItem::className()const
     return m_className;
 }
 
-//return string -    (w, Rect(20, 20, 340, 30));
-QString TreeItem::rectStr()const
-{
-    return QString("(" + parentItemvarName() +", Rect(" + rect_of_element() + "));");
-}
-
-
 QString TreeItem::parentItemvarName() const
 {
     TreeItem *parentEelement = qgraphicsitem_cast<TreeItem *>(parentItem());
 
-    if (parentEelement)
-    {
-        return parentEelement->varName();
-    }
-    else
-        return "w";
+    return parentEelement == 0 ? "w" : parentEelement->varName();
     //ToDo- possibility to change varName of main window. not "w" everytime
 }
 
@@ -726,7 +714,19 @@ void TreeItem::makeParent(TreeItem *newParent)
 }
 
 
+//    find property in methods by QString and return value of it
+QString TreeItem::getProperty(const QString &propertyName) const
+{
+    foreach (Method n, methods) {
+        if( n.property.contains(propertyName, Qt::CaseInsensitive))
+        {
+            return n.value;
 
+        }
+    }
+    return "";
+
+}
 
 //parse .schelp files: finds Methods and Arguments
 void TreeItem::parse_schelp_for_Methods(const QString &name)
