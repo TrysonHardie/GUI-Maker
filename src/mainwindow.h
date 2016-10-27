@@ -55,6 +55,7 @@ class MainWindow : public QMainWindow
 {
     friend class CentralSubWindow;
     friend class AbstractLangStrategy;
+    friend class WindowParametersDialog;
     Q_OBJECT
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -91,7 +92,6 @@ public slots:
 
     void shiftCopyOfItemMake();
 
-    void itemMoved(TreeItem *movedItem, const QPointF &oldPosition);
     void itemMoved(QVector<TreeItem *> treeItems);
 
 private slots:
@@ -125,6 +125,8 @@ private slots:
 //    void addItem();
 
     void about();
+    void on_actionWindowParameters_triggered();
+
 private:
     Ui::MainWindow *ui;
 

@@ -28,7 +28,6 @@
 */
 
 #include "arrayeditorbutton.h"
-#include "coloreditorbutton.h"
 #include "arrayofcolorseditorbutton.h"
 #include "fonteditorbutton.h"
 #include "mainwindow.h"

@@ -22,15 +22,15 @@ SOURCES += main.cpp\
     arrayeditorbutton.cpp \
     arrayeditor.cpp \
     fonteditorbutton.cpp \
-    coloreditorbutton.cpp \
+#    coloreditorbutton.cpp \
     abstracteditorbutton.cpp \
     settingsdialog.cpp \
     arrayofcolorseditorbutton.cpp \
     guimakerscene.cpp \
     stateseditor.cpp \
     langstrategy.cpp \
-    undoRedoCommands.cpp
-
+    undoRedoCommands.cpp \
+    windowparametersdialog.cpp
 
 HEADERS  += mainwindow.h \
     piecesmodel.h \
@@ -41,14 +41,15 @@ HEADERS  += mainwindow.h \
     arrayeditorbutton.h \
     arrayeditor.h \
     fonteditorbutton.h \
-    coloreditorbutton.h \
+#    coloreditorbutton.h \
     abstracteditorbutton.h \
     settingsdialog.h \
     arrayofcolorseditorbutton.h \
     guimakerscene.h \
     stateseditor.h \
     langstrategy.h \
-    undoRedoCommands.h
+    undoRedoCommands.h \
+    windowparametersdialog.h
 
 
 FORMS    += mainwindow.ui

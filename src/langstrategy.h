@@ -38,6 +38,8 @@ class QPainter;
 
 class AbstractLangStrategy
 {
+    friend class WindowParametersDialog;
+    friend class TreeItem;
 protected:
     MainWindow *m_pMainWindow;
     GuiMakerScene *m_pGuiMakerScene;
@@ -45,8 +47,11 @@ protected:
     QString m_langName;
     QString m_fileExtention;
 
+    QString m_WindowTitle;
+    QString m_WindowVarName;
+    QString m_WindowBackgroundColor;
 public:
-    AbstractLangStrategy(QString langName, QString fileExtention);
+    AbstractLangStrategy(QString langName, QString fileExtention, QString varName = "w");
 
 //    using by TreeItem
     virtual QString get_sourceCode(const TreeItem *treeItem, const bool &richText) const = 0;
@@ -62,11 +67,14 @@ public:
     virtual QString get_Window (const bool richText ) const = 0;
     virtual bool recreatePixmap (const QString& textData, QPixmap &pixmap ) const = 0;
     virtual void translateName (QString& nameOfElement) = 0;
+    QString getWindowBackgroundColor() const;
 
     //    using by SettingsDialog
     /*virtual*/ QString get_CurrentLangName ( ) const;
 
+
 //    QString get_ ( ) const = 0;
+
 };
 
 class QColor;

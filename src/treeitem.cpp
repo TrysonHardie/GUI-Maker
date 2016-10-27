@@ -63,11 +63,11 @@ TreeItem::TreeItem(TreeItem *parent, bool root) : QGraphicsRectItem(parent)
 
 
 TreeItem::TreeItem(TreeItem *parent, const QString &classname, const QString &varname)
-    : QGraphicsRectItem(0)
-    ,m_typeName (classname),
-      m_varName (varname),
+    : QGraphicsRectItem(0),
       m_rect (QRect(0,0,500,500)),
-      m_mode (NothingToDo)
+      m_mode (NothingToDo),
+      m_typeName (classname),
+      m_varName (varname)
 {
     Q_UNUSED(parent);
 
@@ -77,13 +77,13 @@ TreeItem::TreeItem(TreeItem *parent, const QString &classname, const QString &va
 //copy constructor -- TreeItem *parent - is needed to avoid collision of constructors
 TreeItem::TreeItem(TreeItem *olditem)
     : QGraphicsRectItem(olditem->parent()),
-      m_typeName (olditem->m_typeName),
-      m_className (olditem->className()),
-      //      m_varName (olditem->varName()), // name of variable must be uniq
-      m_rect (olditem->rect()),
-      m_pixmap(olditem->get_pixmap()),
-      m_isContainerOfViews(olditem->isContainerOfViews()),
+      m_rect (olditem->m_rect),
       m_mode (NothingToDo),
+      m_pixmap(olditem->m_pixmap),
+      m_isContainerOfViews(olditem->m_isContainerOfViews),
+      m_typeName (olditem->m_typeName),
+      m_className (olditem->m_className),
+      //      m_varName (olditem->varName()), // name of variable must be uniq
       methods(olditem->methods)
 {
     init();
@@ -477,8 +477,7 @@ void TreeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidge
     //    ---Draw Text
     painter->setFont(QFont("DejaVu Sans Mono", 14));
 
-    MainWindow *pMainWindow = MainWindow::getInstance();
-    pMainWindow->getCurrLangStrategy()->
+    MainWindow::getInstance()->getCurrLangStrategy()->
             paintElement(this, painter);
 
 }
@@ -612,32 +611,6 @@ void TreeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 
 
-//----mics
-
-//get all the code
-//        Qt's text widgets are able to display rich text: HTML 4 markup
-QString TreeItem::get_info(bool richText) const
-{
-    QString result;
-
-    MainWindow *pMainWindow = MainWindow::getInstance();
-    AbstractLangStrategy *lang = pMainWindow->getCurrLangStrategy();
-
-    result = lang->get_sourceCode(this, richText);
-
-//    result = get_info_SuperCollider(richText);
-
-    return result;
-}
-
-
-
-
-
-
-
-
-
 //---GuiElement
 QString TreeItem::className()const
 {
@@ -647,9 +620,10 @@ QString TreeItem::className()const
 QString TreeItem::parentItemvarName() const
 {
     TreeItem *parentEelement = qgraphicsitem_cast<TreeItem *>(parentItem());
+    MainWindow *pMainWindow = MainWindow::getInstance();
+    AbstractLangStrategy *lang = pMainWindow->getCurrLangStrategy();
 
-    return parentEelement == 0 ? "w" : parentEelement->varName();
-    //ToDo- possibility to change varName of main window. not "w" everytime
+    return parentEelement == 0 ? lang->m_WindowVarName : parentEelement->varName();
 }
 
 //get string representation of items rectangle - "20, 20, 340, 30"

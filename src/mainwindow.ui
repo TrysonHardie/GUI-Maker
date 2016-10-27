@@ -36,6 +36,7 @@
    <addaction name="actionCopyCode"/>
    <addaction name="actionTest"/>
    <addaction name="actionChangeLang"/>
+   <addaction name="actionWindowParameters"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionNew">
@@ -70,6 +71,14 @@
    </property>
    <property name="toolTip">
     <string>ProgrammingLang</string>
+   </property>
+  </action>
+  <action name="actionWindowParameters">
+   <property name="text">
+    <string>WindowParameters</string>
+   </property>
+   <property name="toolTip">
+    <string>Parameters of main window</string>
    </property>
   </action>
  </widget>

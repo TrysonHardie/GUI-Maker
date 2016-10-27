@@ -112,7 +112,13 @@ void GuiMakerScene::drawBackground(QPainter *painter, const QRectF &rect)
 
     QRectF sceneRect = this->sceneRect();
 
-    painter->fillRect(sceneRect, Qt::white);
+//    m_WindowBackgroundColor
+
+    //    get code string of main window
+    MainWindow *pMainWindow = MainWindow::getInstance();
+    AbstractLangStrategy *lang = pMainWindow->getCurrLangStrategy();
+
+    painter->fillRect(sceneRect, QColor(lang->getWindowBackgroundColor()));
 
     painter->setBrush(QColor(Qt::blue));
     painter->setPen(QColor(Qt::lightGray));
@@ -150,21 +156,22 @@ QString GuiMakerScene::getText(bool richText)
     AbstractLangStrategy *lang = pMainWindow->getCurrLangStrategy();
     resultText = lang->get_Window(richText);
 
-    if( !hasItems() )
-        return resultText;
+    if( hasItems() )
+    {
+        //get code string of each element
+        foreach (QGraphicsItem *item, items(Qt::AscendingOrder)) {
+            if (TreeItem *element = qgraphicsitem_cast<TreeItem *>(item))
+                resultText.append(lang->get_sourceCode(element, richText));
 
-
-    //get code string of each element
-    foreach (QGraphicsItem *item, items(Qt::AscendingOrder)) {
-        if (TreeItem *element = qgraphicsitem_cast<TreeItem *>(item))
-            resultText.append(lang->get_sourceCode(element, richText));
-
-//            resultText.append(element->get_info(richText));
+            //            resultText.append(element->get_info(richText));
+        }
     }
 
 //    add specific ending
-    if (AutoItLangStrategy* au3 = dynamic_cast<AutoItLangStrategy*>(lang))
+    if (AutoItLangStrategy* au3 = dynamic_cast<AutoItLangStrategy*>(lang)) // lang->get_CurrentLangName() == "AutoIt"
+    {
         resultText.append(au3->get_endCode(richText));
+    }
 
 
     return resultText;

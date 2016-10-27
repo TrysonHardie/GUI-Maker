@@ -41,17 +41,11 @@ void TableModel::clear()
 {
     beginResetModel();
 //    beginRemoveRows(QModelIndex(), 0, rowCount());
-//    delete m_currentItem;
 
 //    dummy TreeItem
-//    m_currentItem = new TreeItem(0);
     m_currentItem = 0;
 
-//    m_currentItem = new TreeItem(0, "Window", "w");
-
 //    endRemoveRows();
-
-
     endResetModel();
 
 }

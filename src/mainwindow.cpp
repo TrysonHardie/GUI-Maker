@@ -31,6 +31,7 @@
 #include "treemodel.h"
 #include "ui_mainwindow.h"
 #include "undoRedoCommands.h"
+#include "windowparametersdialog.h"
 
 #include <QSplitter>
 #include <QMessageBox>
@@ -708,10 +709,6 @@ void MainWindow::shiftCopyOfItemMake()
     }
 }
 
-void MainWindow::itemMoved(TreeItem *movedItem, const QPointF &oldPosition)
-{
-//    undoStack->push(new MoveCommand(movedItem, oldPosition));
-}
 
 void MainWindow::itemMoved(QVector<TreeItem *> treeItems)
 {
@@ -917,6 +914,7 @@ QString MainWindow::sign()
 //tests
 void MainWindow::on_actionTest_triggered()
 {
+
 }
 
 //allow to change current programming language
@@ -957,4 +955,10 @@ void MainWindow::about()
     sText += "</small></p>\n";
 
    QMessageBox::about(this, tr("About ") + GUI_MAKER_TITLE, sText);
+}
+
+void MainWindow::on_actionWindowParameters_triggered()
+{
+    // windowParameters
+    (new WindowParametersDialog(this))->exec();
 }

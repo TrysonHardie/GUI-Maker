@@ -77,9 +77,6 @@ public:
 
 //---getters
 
-    QString get_info(bool richText = false) const;
-
-
     bool isContainerOfViews() const
     {
        return m_isContainerOfViews;
@@ -193,21 +190,21 @@ private:
 
 //    List of top-level childs, stored only by RootItem
     QList<TreeItem*> childItems2;
-    bool itisaRootItem;
 
-//    context menu
+    QRect m_rect; // ??
+    Mods m_mode;
+    QPixmap m_pixmap;
+
+    bool m_isContainerOfViews;
+    bool itisaRootItem;
+    int m_current_toggle_num;
+
+    //    context menu
     QMenu *myContextMenu;
 
     QString m_typeName;
     QString m_className;
     QString m_varName;
-    QRect m_rect; // ??
-    QPixmap m_pixmap;
-
-    bool m_isContainerOfViews;
-    int m_current_toggle_num;
-
-    Mods m_mode;
 
     QPointF myOldPos;
 

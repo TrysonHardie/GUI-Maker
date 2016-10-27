@@ -28,9 +28,17 @@
 const QString signa = "Generated with " GUI_MAKER_TITLE " " GUI_MAKER_SITE " " ;
 
 
-AbstractLangStrategy::AbstractLangStrategy(QString langName, QString fileExtention):
+QString AbstractLangStrategy::getWindowBackgroundColor() const
+{
+    return m_WindowBackgroundColor;
+}
+
+AbstractLangStrategy::AbstractLangStrategy(QString langName, QString fileExtention, QString varName):
     m_langName(langName),
-    m_fileExtention(fileExtention)
+    m_fileExtention(fileExtention),
+    m_WindowTitle ("gui"),
+    m_WindowVarName (varName), // "w"
+    m_WindowBackgroundColor ("#ffffff") //white
 {
     m_pMainWindow = MainWindow::getInstance();
     m_pGuiMakerScene = m_pMainWindow->guiMakerscene;
@@ -55,7 +63,7 @@ QString AbstractLangStrategy::get_extention() const
 
 
 
-
+//--- SuperCollider
 
 SuperColliderLangStrategy::SuperColliderLangStrategy(): AbstractLangStrategy("SuperCollider", ".scd")
 {
@@ -106,21 +114,27 @@ QString SuperColliderLangStrategy::get_sourceCode(const TreeItem *treeItem, cons
     //    add StaticText to CompositeView
     if (m_className == "CompositeView")
     {
+        // CompositeView have only one method - background; others - it is for StaticText
+        QString colorTag = treeItem->getProperty("background");
+        if( colorTag != "" )
+        {
+            if (richText)
+                colorTag = "<font color="+colorTag+">" + colorTag + methodTag2;
+            text.append("." + methodTag + "background" + methodTag2 +
+                        "_(Color.fromHexString(\"" + colorTag +  "\"))"+br);
+
+        }
 
         //        if string is empty - dont add StaticText
-        if (!treeItem->getProperty("string").isEmpty())
+        if (treeItem->getProperty("string").isEmpty())
         {
-            // background
-            QString colorTag = treeItem->getProperty("background");
-            if( colorTag != "" )
-            {
-                if (richText)
-                    colorTag = "<font color="+colorTag+">" + colorTag + methodTag2;
-                text.append("." + methodTag + "background" + methodTag2 +
-                            "_(Color.fromHexString(\"" + colorTag +  "\"))"+br);
+            // If 'string' is empty -> don't add StaticText, so we don't need to adding any methods. return
 
-            }
+            text.append(";"+br);
 
+            return text;
+        }
+        else { // add StaticText
             // Find 'Font' field in the methods. e.g. "12|Arial"
 
             QString fontSize = (treeItem->getProperty("font")).split('|').value(0);
@@ -235,12 +249,11 @@ QString SuperColliderLangStrategy::get_commentedSignature() const
 //Window("w", Rect(470, 0, 290, 230));
 QString SuperColliderLangStrategy::get_Window(const bool richText) const
 {
-    QString resultText, mainWindowVarName;
-    mainWindowVarName = "w";
+    QString resultText;
 
 //    in the beg of the file must be list of all variables, if exist - "var w, somevar1, somevar2;"
-    //    name of variable of mainWindow is mainWindowVarName == ('w')
-    QString listOfVars = "\nvar " + mainWindowVarName;
+    //    name of variable of mainWindow is m_WindowVarName == ('w')
+    QString listOfVars = "\nvar " + m_WindowVarName;
 
     foreach (QGraphicsItem *item, m_pGuiMakerScene->items()) {
         if (TreeItem *element = qgraphicsitem_cast<TreeItem *>(item))
@@ -254,16 +267,31 @@ QString SuperColliderLangStrategy::get_Window(const bool richText) const
 
     if( richText )
     {
-        resultText = mainWindowVarName+" = <font color=\"blue\">Window</font>.new(\"gui\", Rect(100, 100, "+
+        resultText = m_WindowVarName+" = <font color=\"blue\">Window</font>.new(\"" + m_WindowTitle + "\", Rect(100, 100, "+
                 m_pMainWindow->subWindow_width_height()+
-                ")).<font color=\"darkred\">front</font>;<br><br>";
+                "))";
+        // background
+        QString colorTag = m_WindowBackgroundColor;
+        colorTag = "<font color="+colorTag+">" + colorTag + "</font>";
+        resultText.append(".<font color=\"darkred\">background</font>_(Color.fromHexString(\"" +
+                          colorTag + "\"))");
+
+
+        resultText.append(".<font color=\"darkred\">front</font>;<br><br>");
     }
     else
     {
-        resultText =  listOfVars + mainWindowVarName +" = Window.new(\"gui\", Rect(100, 100, "+
+        resultText =  listOfVars + m_WindowVarName +" = Window.new(\"" + m_WindowTitle + "\", Rect(100, 100, "+
                 m_pMainWindow->subWindow_width_height()+
-                ")).front;\n\n";
+                "))";
+        // background
+        const QString& colorTag = m_WindowBackgroundColor;
+
+        resultText.append(".background_(Color.fromHexString(\"" + colorTag + "\"))");
+
+        resultText.append(".front;\n\n");
     }
+
 
     return resultText;
 }
@@ -301,7 +329,6 @@ void SuperColliderLangStrategy::paintElement(const TreeItem *t, QPainter *painte
     const QList<TreeItem::Method>& methods = t->methods;
     const QRect& m_rect = t->m_rect;
 
-    //    ToDo- complicated?
     if( m_typeName.contains( "Button" )){
 
         //    we actually get: ["yes",Color.grey, Color.white], ["no",Color.white, Color.grey]
@@ -393,7 +420,7 @@ QString SuperColliderLangStrategy::getRectOfElement(const TreeItem *t) const
 
 //---AutoIt language
 
-AutoItLangStrategy::AutoItLangStrategy(): AbstractLangStrategy("AutoIt", ".au3")
+AutoItLangStrategy::AutoItLangStrategy(): AbstractLangStrategy("AutoIt", ".au3", "hGUI")
 {
 
 }
@@ -503,9 +530,8 @@ QString AutoItLangStrategy::get_commentedSignature() const
 QString AutoItLangStrategy::get_Window(const bool richText) const
 {
 
-    QString resultText, br, mainWindowVarName, constants;
+    QString resultText, br, constants;
 
-    mainWindowVarName = "hGUI";
 
     //            including some libraries
     constants = "\n#include <EditConstants.au3>\n#include <GUIConstantsEx.au3>\n#include <StaticConstants.au3>\n#include <WindowsConstants.au3> "
@@ -513,22 +539,26 @@ QString AutoItLangStrategy::get_Window(const bool richText) const
 
     if( richText )
     {
-        resultText ="Local $"+ mainWindowVarName +" = <font color=\"blue\">GUICreate</font>(\"gui\", "+
+        resultText ="Local $"+ m_WindowVarName +" = <font color=\"blue\">GUICreate</font>(\"" + m_WindowTitle + "\", "+
                 m_pMainWindow->subWindow_width_height()+
                 ")<br><br>";
         br = "<br>";
+
     }
     else
     {
-        resultText =constants + "\n\nLocal $"+ mainWindowVarName +" = GUICreate(\"gui\", "+
+        resultText =constants + "\n\nLocal $"+ m_WindowVarName +" = GUICreate(\"" + m_WindowTitle + "\", "+
                 m_pMainWindow->subWindow_width_height()+
                 ")\n";
         br= "\n";
     }
 
-    //        GUISetState(@SW_SHOW, $hGUI)
-    resultText.append(QString("GUISetState(@SW_SHOW, $%2)%1%1"
-).arg(br).arg(mainWindowVarName));
+    QString colorTag = m_WindowBackgroundColor; //#ffffff
+    colorTag.replace(0,1, "0x"); //0xffffff
+
+    //        GUISetBkColor($COLOR_RED); GUISetState(@SW_SHOW, $hGUI);
+    resultText.append(QString("GUISetBkColor(%3)%1GUISetState(@SW_SHOW, $%2);%1%1"
+                              ).arg(br).arg(m_WindowVarName).arg(colorTag));
 
     return resultText;
 }
@@ -615,17 +645,6 @@ void AutoItLangStrategy::paintElement(const TreeItem *t, QPainter *painter)
 }
 
 QString AutoItLangStrategy::get_endCode(const bool richText) const
-{
-    QString resultText, br;
-
-    if( richText )
-    {
-        br = "<br>";
-    }
-    else
-    {
-        br= "\n";
-    }
     //; ---Display the GUI.
     //    ; Loop until the user exits.
     //    While 1
@@ -634,9 +653,8 @@ QString AutoItLangStrategy::get_endCode(const bool richText) const
     //                ExitLoop
     //        EndSwitch
     //    WEnd
-    resultText.append(QString("While 1%1Switch GUIGetMsg()%1Case $GUI_EVENT_CLOSE %1ExitLoop%1EndSwitch%1WEnd%1%1"
-).arg(br));
-
-    return resultText;
+{
+    return QString("While 1%1Switch GUIGetMsg()%1Case $GUI_EVENT_CLOSE %1ExitLoop%1EndSwitch%1WEnd%1%1"
+                   ).arg(richText ? "<br>" : "\n");
 
 }
