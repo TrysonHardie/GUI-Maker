@@ -235,6 +235,41 @@ QString SuperColliderLangStrategy::get_sourceCode(const TreeItem *treeItem, cons
         }
     }
 
+    //    add StaticText to Knob
+    if (m_className == "Knob"){
+
+        //        if string is empty - dont add StaticText
+        if (treeItem->getProperty("string").isEmpty() || richText)
+        {
+            // If 'string' is empty -> don't add StaticText, so we don't need to adding any methods. return
+
+            text.append(";"+br);
+
+            return text;
+        }
+        else // add StaticText before "string" method
+        {
+
+            // Find 'Font' field in the methods. e.g. "12|Arial"
+
+            int index = text.indexOf(".string");
+
+            // -- move it right --
+            // get the font size
+            const QStringList fnt = (treeItem->getProperty("font")).split('|');
+            const int FONTSIZE = (fnt.size() > 1) ? fnt[0].toInt() : 12;
+
+            const QString WIDTH = QString::number(treeItem->m_rect.width() + 100); // we add 100 because text lenght may be is larger than m_rect.width() of a Knob... hm, need to calculate the lenght of a text
+
+            QString rect(QString::number(treeItem->pos().x()) + "," + QString::number(treeItem->m_rect.height() + treeItem->pos().y()) + ", " +
+                           WIDTH + "," + QString::number(FONTSIZE));
+
+//            StaticText(w, Rect(10,10, 136,12))
+            text.insert(index, ";StaticText(" + treeItem->parentItemvarName() +", Rect(" + rect + "))"+br);
+
+        }
+    }
+
     text.append(";"+br);
 
     return text;
@@ -364,6 +399,13 @@ void SuperColliderLangStrategy::paintElement(const TreeItem *t, QPainter *painte
         painter->drawText(QPointF(10, 15), getStringField(t));
 
     }
+    else if (m_typeName == "Knob"){
+        painter->setFont(getFont(t));
+        painter->setPen(QPen(getStringColor(t)));
+        painter->drawText(QPointF(0, m_rect.height() + painter->fontInfo().pointSize()), getStringField(t));
+
+    }
+
     else //    add StaticText to CompositeView. methods.at(0).value - its a string
         if (m_typeName == "CompositeView" )
         {
