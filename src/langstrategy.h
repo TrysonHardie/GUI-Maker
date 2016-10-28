@@ -73,6 +73,7 @@ public:
     /*virtual*/ QString get_CurrentLangName ( ) const;
 
 
+    void clear();
 //    QString get_ ( ) const = 0;
 
 };

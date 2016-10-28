@@ -829,6 +829,8 @@ void MainWindow::on_actionNew_triggered()
         tree_model->clear();
         guiMakerscene->clear();
         undoStack->clear();
+        m_currentLangStrategy->clear();
+        subWindow1->resize(360, 360);
 
     }
 }

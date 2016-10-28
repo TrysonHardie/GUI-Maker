@@ -56,6 +56,15 @@ QString AbstractLangStrategy::get_CurrentLangName() const
     return m_langName;
 }
 
+// reset
+void AbstractLangStrategy::clear()
+{
+    m_WindowTitle = "gui";
+//    m_WindowVarName = varName; // "w"
+    m_WindowBackgroundColor = "#ffffff"; //white
+
+}
+
 QString AbstractLangStrategy::get_extention() const
 {
     return m_fileExtention;
@@ -405,7 +414,6 @@ void SuperColliderLangStrategy::paintElement(const TreeItem *t, QPainter *painte
         painter->drawText(QPointF(0, m_rect.height() + painter->fontInfo().pointSize()), getStringField(t));
 
     }
-
     else //    add StaticText to CompositeView. methods.at(0).value - its a string
         if (m_typeName == "CompositeView" )
         {
