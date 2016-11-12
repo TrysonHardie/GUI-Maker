@@ -6,6 +6,7 @@ By using GUI maker it's realy easy to create a graphical user interfaces: just d
 Videos:
 * [AutoIt Calculator](https://youtu.be/PYTdHDhPhcs)<br>
 * [SuperCollider Calculator](https://youtu.be/SeF3GWO346Y)<br>
+* [AMSynth in SuperCollider](https://youtu.be/ZsTNBsti6xM)<br>
 
 [Homepage](http://trysohard.info/GUI-Maker/)<br>
 
