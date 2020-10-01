@@ -1,6 +1,6 @@
 # GUI-Maker
 
-It is a free graphical app, that helps to create GUI in some programming languages (SuperCollider, AutoIt) faster. This code-generation tool written in C++ with the Qt5 framework.
+It is a free graphical app, that helps you to create GUI in some programming languages (SuperCollider, AutoIt) faster. This code-generation tool written in C++ with the Qt5 framework.
 By using GUI maker it's realy easy to create a graphical user interfaces: just drag elements, set parameters and, guess what, you're done.
 
 Videos:
@@ -59,6 +59,12 @@ With GUI Maker - just 6 sec. Drag  Button,Knob,NumberBox,Slider,PopUpMenu, and p
 * Elements represented by Pixmaps, so you can't see some changes: color, font etc.
 * No binary
 * This is not a TextEditor
+
+## Installation
+***
+
+* git clone https://github.com/TrysonHardie/GUI-Maker
+* cd GUI-maker
 
 
 ## License:
